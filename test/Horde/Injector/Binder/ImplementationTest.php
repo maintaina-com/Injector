@@ -1,7 +1,11 @@
 <?php
-class Horde_Injector_Binder_ImplementationTest extends Horde_Test_Case
+
+namespace Horde\Injector\Binder;
+use Horde_Test_Case;
+
+class ImplementationTest extends Horde_Test_Case
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->df = new Horde_Injector_DependencyFinder();
     }

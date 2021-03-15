@@ -1,5 +1,10 @@
 <?php
-class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
+
+namespace Horde\Injector;
+use PHPUnit\Framework\TestCase;
+use Horde_Injector_Binder;
+
+class InjectorTest extends TestCase
 {
     public function testShouldGetDefaultImplementationBinder()
     {
@@ -229,10 +234,10 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
         $mockInjector->expects($this->any()) // this gets called once in addBinder
             ->method('getBinder')
             ->with('BOUND_INTERFACE')
-            ->will($this->returnValue(new Horde_Injector_Binder_Mock()));
+            ->will($this->returnValue(new Binder_Mock()));
 
         $injector = new Horde_Injector($mockInjector);
-        $binder = new Horde_Injector_Binder_Mock();
+        $binder = new Binder_Mock();
         $injector->addBinder('BOUND_INTERFACE', $binder);
         $childInjector = $injector->createChildInjector();
         $this->assertSame($binder, $childInjector->getBinder('BOUND_INTERFACE'));
@@ -249,7 +254,7 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
 /**
  * Used by preceding tests
  */
-class Horde_Injector_Binder_Mock implements Horde_Injector_Binder
+class Binder_Mock implements Horde_Injector_Binder
 {
     private $_interface;
     public function create(Horde_Injector $injector)
@@ -263,7 +268,7 @@ class Horde_Injector_Binder_Mock implements Horde_Injector_Binder
     }
 }
 
-class Horde_Injector_Binder_MockWithDependencies implements Horde_Injector_Binder
+class MockWithDependencies implements Horde_Injector_Binder
 {
     private $_interface;
 
