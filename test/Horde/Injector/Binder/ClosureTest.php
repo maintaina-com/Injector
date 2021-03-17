@@ -1,5 +1,12 @@
 <?php
-class Horde_Injector_Binder_ClosureTest extends Horde_Test_Case
+
+namespace Horde\Injector\Binder;
+use Horde_Test_Case;
+use \Horde_Injector;
+use \Horde_Injector_Binder_Closure;
+use \Horde_Injector_TopLevel;
+
+class ClosureTest extends Horde_Test_Case
 {
     public function testShouldCallClosure()
     {

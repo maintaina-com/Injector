@@ -1,6 +1,9 @@
 <?php
 namespace Horde\Injector;
 use Horde_Test_Case;
+use \Horde_Injector_DependencyFinder;
+use \Horde_Injector_Binder_Implementation;
+use \Horde_Injector_Binder_Factory;
 
 class BinderTest extends Horde_Test_Case
 {

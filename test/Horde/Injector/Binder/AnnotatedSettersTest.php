@@ -1,5 +1,14 @@
 <?php
-class Horde_Injector_Binder_AnnotatedSettersTest extends Horde_Test_Case
+
+namespace Horde\Injector\Binder;
+use Horde_Test_Case;
+use \Horde_Injector_Binder;
+use \Horde_Injector;
+use \Horde_Injector_DependencyFinder;
+use \Horde_Injector_TopLevel;
+use \Horde_Injector_Binder_AnnotatedSetters;
+
+class AnnotatedSettersTest extends Horde_Test_Case
 {
     public function testShouldCallAnnotatedSetters()
     {

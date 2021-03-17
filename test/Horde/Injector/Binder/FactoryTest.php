@@ -1,5 +1,12 @@
 <?php
-class Horde_Injector_Binder_FactoryTest extends Horde_Test_Case
+
+namespace Horde\Injector\Binder;
+use Horde_Test_Case;
+use \Horde_Injector;
+use \Horde_Injector_Binder_Factory;
+use \Horde_Injector_TopLevel;
+
+class FactoryTest extends Horde_Test_Case
 {
     public function testShouldCallFactoryMethod()
     {
