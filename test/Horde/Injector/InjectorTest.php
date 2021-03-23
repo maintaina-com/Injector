@@ -2,7 +2,6 @@
 
 namespace Horde\Injector;
 use PHPUnit\Framework\TestCase;
-use \Horde_Injector_Binder_Mock;
 use \Horde_Injector_Binder;
 use \Horde_Injector;
 use \Horde_Injector_TopLevel;
@@ -174,7 +173,9 @@ class InjectorTest extends TestCase
      */
     public function testChildInjectorsDoNotAskParentForInstanceIfBindingIsSet()
     {
-        $mockTopLevel = $this->getMockBuilder('Horde_Injector_TopLevel', array('getInstance'))->getMock();
+        $mockTopLevel = $this->getMockBuilder('Horde_Injector_TopLevel')
+            ->setMethods(array('getInstance'))
+            ->getMock();
         $mockTopLevel->expects($this->never())->method('getInstance');
         $injector = new Horde_Injector($mockTopLevel);
 
@@ -184,7 +185,9 @@ class InjectorTest extends TestCase
 
     public function testChildInjectorAsksParentForInstance()
     {
-        $topLevelMock = $this->getMockBuilder('Horde_Injector_TopLevel', array('getInstance'))->getMock();
+        $topLevelMock = $this->getMockBuilder('Horde_Injector_TopLevel')
+            ->setMethods(array('getInstance'))
+            ->getMock();
 
         $topLevelMock->expects($this->once())
             ->method('getInstance')

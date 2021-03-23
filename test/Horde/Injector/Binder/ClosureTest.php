@@ -10,8 +10,14 @@ class ClosureTest extends Horde_Test_Case
 {
     public function testShouldCallClosure()
     {
-        $childInjector = $this->getMockSkipConstructor('Horde_Injector', array('createInstance', 'getInstance'));
-        $injector = $this->getMockSkipConstructor('Horde_Injector', array('createChildInjector'));
+        $childInjector = $this->getMockBuilder('Horde_Injector')
+            ->setMethods(array('createInstance', 'getInstance'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $injector = $this->getMockBuilder('Horde_Injector')
+            ->setMethods(array('createChildInjector'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $injector->expects($this->once())
             ->method('createChildInjector')
             ->with()

@@ -20,7 +20,7 @@ class AnnotatedSettersTest extends Horde_Test_Case
 
         $this->assertNull($instance->dep);
         $newInstance = $annotatedSettersBinder->create($injector);
-        $this->assertInstanceOf('Horde_Injector_Binder_AnnotatedSettersTest__NoDependencies', $newInstance->dep);
+        $this->assertInstanceOf(Horde_Injector_Binder_AnnotatedSettersTest__NoDependencies::class, $newInstance->dep);
     }
 }
 
