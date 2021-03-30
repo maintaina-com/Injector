@@ -8,6 +8,7 @@ use \Horde_Injector_TopLevel;
 use \Horde_Injector_DependencyFinder;
 use \Horde_Injector_Binder_Implementation;
 use \StdClass;
+use \Horde_Injector_Binder_Mock;
 
 class InjectorTest extends TestCase
 {

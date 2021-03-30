@@ -1,11 +1,11 @@
 <?php
 
 namespace Horde\Injector\Binder;
-use Horde_Test_Case;
+use Horde_Test_Case as TestCase;
 use \Horde_Injector_DependencyFinder;
 use \Horde_Injector_Binder_Implementation;
 
-class ImplementationTest extends Horde_Test_Case
+class ImplementationTest extends TestCase
 {
     public function setUp(): void
     {
