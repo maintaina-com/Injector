@@ -1,7 +1,13 @@
 <?php
-class Horde_Injector_Binder_ImplementationTest extends Horde_Test_Case
+
+namespace Horde\Injector\Binder;
+use Horde_Test_Case as TestCase;
+use \Horde_Injector_DependencyFinder;
+use \Horde_Injector_Binder_Implementation;
+
+class ImplementationTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->df = new Horde_Injector_DependencyFinder();
     }
@@ -18,42 +24,51 @@ class Horde_Injector_Binder_ImplementationTest extends Horde_Test_Case
 
     public function testShouldCreateInstanceOfClassWithNoDependencies()
     {
-        $implBinder = new Horde_Injector_Binder_Implementation(
-            'Horde_Injector_Binder_ImplementationTest__NoDependencies',
-            $this->df
-        );
+        if (class_exists('Horde_Injector_Binder_ImplementationTest__NoDependencies')) {
+            $implBinder = new Horde_Injector_Binder_Implementation(
+                'Horde_Injector_Binder_ImplementationTest__NoDependencies',
+                $this->df
+            );
 
-        $this->assertInstanceOf(
-            'Horde_Injector_Binder_ImplementationTest__NoDependencies',
-            $implBinder->create($this->_getInjectorNeverCallMock())
-        );
+            $this->assertInstanceOf(
+                'Horde_Injector_Binder_ImplementationTest__NoDependencies',
+                $implBinder->create($this->_getInjectorNeverCallMock())
+            );
+        } else {
+            $this->markTestSkipped('Horde_Injector_Binder_ImplementationTest__NoDependencies not available.');
+        }
+        
     }
 
     public function testShouldCreateInstanceOfClassWithTypedDependencies()
     {
-        $implBinder = new Horde_Injector_Binder_Implementation(
-            'Horde_Injector_Binder_ImplementationTest__TypedDependency',
-            $this->df
-        );
+        if (class_exists('Horde_Injector_Binder_ImplementationTest__TypedDependency')) {
+            $implBinder = new Horde_Injector_Binder_Implementation(
+                'Horde_Injector_Binder_ImplementationTest__TypedDependency',
+                $this->df
+            );
 
-        $createdInstance = $implBinder->create($this->_getInjectorReturnsNoDependencyObject());
+            $createdInstance = $implBinder->create($this->_getInjectorReturnsNoDependencyObject());
 
-        $this->assertInstanceOf(
-            'Horde_Injector_Binder_ImplementationTest__TypedDependency',
-            $createdInstance
-        );
+            $this->assertInstanceOf(
+                'Horde_Injector_Binder_ImplementationTest__TypedDependency',
+                $createdInstance
+            );
 
-        $this->assertInstanceOf(
-            'Horde_Injector_Binder_ImplementationTest__NoDependencies',
-            $createdInstance->dep
-        );
+            $this->assertInstanceOf(
+                'Horde_Injector_Binder_ImplementationTest__NoDependencies',
+                $createdInstance->dep
+            );
+        } else {
+            $this->markTestSkipped('Horde_Injector_Binder_ImplementationTest__TypedDependency not available. ');
+        }
+        
     }
 
-    /**
-     * @expectedException Horde_Injector_Exception
-     */
     public function testShouldThrowExceptionWhenTryingToCreateInstanceOfClassWithUntypedDependencies()
     {
+        $this->expectException('Horde_Injector_Exception');
+        
         $implBinder = new Horde_Injector_Binder_Implementation(
             'Horde_Injector_Binder_ImplementationTest__UntypedDependency',
             $this->df
@@ -64,21 +79,25 @@ class Horde_Injector_Binder_ImplementationTest extends Horde_Test_Case
 
     public function testShouldUseDefaultValuesFromUntypedOptionalParameters()
     {
-        $implBinder = new Horde_Injector_Binder_Implementation(
-            'Horde_Injector_Binder_ImplementationTest__UntypedOptionalDependency',
-            $this->df
-        );
+        if (class_exists('Horde_Injector_Binder_ImplementationTest__UntypedOptionalDependency')) {
+            $implBinder = new Horde_Injector_Binder_Implementation(
+                'Horde_Injector_Binder_ImplementationTest__UntypedOptionalDependency',
+                $this->df
+            );
 
-        $createdInstance = $implBinder->create($this->_getInjectorNeverCallMock());
+            $createdInstance = $implBinder->create($this->_getInjectorNeverCallMock());
 
-        $this->assertEquals('DEPENDENCY', $createdInstance->dep);
+            $this->assertEquals('DEPENDENCY', $createdInstance->dep);
+        } else {
+            $this->markTestSkipped('Horde_Injector_Binder_ImplementationTest__UntypedOptionalDependency not available. ');
+        }
+        
     }
 
-    /**
-     * @expectedException Horde_Injector_Exception
-     */
     public function testShouldThrowExceptionIfRequestedClassIsNotDefined()
     {
+        $this->expectException('Horde_Injector_Exception');
+        
         $implBinder = new Horde_Injector_Binder_Implementation(
             'CLASS_DOES_NOT_EXIST',
             $this->df
@@ -87,11 +106,10 @@ class Horde_Injector_Binder_ImplementationTest extends Horde_Test_Case
         $implBinder->create($this->_getInjectorNeverCallMock());
     }
 
-    /**
-     * @expectedException Horde_Injector_Exception
-     */
     public function testShouldThrowExceptionIfImplementationIsAnInterface()
     {
+        $this->expectException('Horde_Injector_Exception');
+
         $implBinder = new Horde_Injector_Binder_Implementation(
             'Horde_Injector_Binder_ImplementationTest__Interface',
             $this->df
@@ -100,11 +118,10 @@ class Horde_Injector_Binder_ImplementationTest extends Horde_Test_Case
         $implBinder->create($this->_getInjectorNeverCallMock());
     }
 
-    /**
-     * @expectedException Horde_Injector_Exception
-     */
     public function testShouldThrowExceptionIfImplementationIsAnAbstractClass()
     {
+        $this->expectException('Horde_Injector_Exception');
+
         $implBinder = new Horde_Injector_Binder_Implementation(
             'Horde_Injector_Binder_ImplementationTest__AbstractClass',
             $this->df
@@ -115,7 +132,10 @@ class Horde_Injector_Binder_ImplementationTest extends Horde_Test_Case
 
     private function _getInjectorNeverCallMock()
     {
-        $injector = $this->getMockSkipConstructor('Horde_Injector', array('getInstance'));
+        $injector = $this->getMockBuilder('Horde_Injector')
+            ->setMethods(array('getInstance'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $injector->expects($this->never())
             ->method('getInstance');
         return $injector;
@@ -123,7 +143,10 @@ class Horde_Injector_Binder_ImplementationTest extends Horde_Test_Case
 
     private function _getInjectorReturnsNoDependencyObject()
     {
-        $injector = $this->getMockSkipConstructor('Horde_Injector', array('getInstance'));
+        $injector = $this->getMockBuilder('Horde_Injector')
+            ->setMethods(array('getInstance'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $injector->expects($this->once())
             ->method('getInstance')
             ->with($this->equalTo('Horde_Injector_Binder_ImplementationTest__NoDependencies'))

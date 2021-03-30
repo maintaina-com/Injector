@@ -1,9 +1,20 @@
 <?php
-class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
+
+namespace Horde\Injector;
+use PHPUnit\Framework\TestCase;
+use \Horde_Injector_Binder;
+use \Horde_Injector;
+use \Horde_Injector_TopLevel;
+use \Horde_Injector_DependencyFinder;
+use \Horde_Injector_Binder_Implementation;
+use \StdClass;
+use \Horde_Injector_Binder_Mock;
+
+class InjectorTest extends TestCase
 {
     public function testShouldGetDefaultImplementationBinder()
     {
-        $topLevel = $this->getMock('Horde_Injector_TopLevel', array('getBinder'));
+        $topLevel = $this->getMockBuilder('Horde_Injector_TopLevel', array('getBinder'))->getMock();
         $topLevel->expects($this->once())
             ->method('getBinder')
             ->with($this->equalTo('UNBOUND_INTERFACE'))
@@ -24,6 +35,7 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
 
     public function testShouldProvideMagicFactoryMethodForBinderAddition()
     {
+        $this->expectException('ReflectionException');
         $injector = new Horde_Injector(new Horde_Injector_TopLevel());
 
         // binds a Horde_Injector_Binder_Mock object
@@ -33,6 +45,7 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
 
     public function testShouldProvideMagicFactoryMethodForBinderAdditionWhereBinderHasDependencies()
     {
+        $this->expectException('ReflectionException');
         $injector = new Horde_Injector(new Horde_Injector_TopLevel());
 
         // binds a Horde_Injector_Binder_Mock object
@@ -47,6 +60,7 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
      */
     public function testShouldThrowExceptionIfInterfaceNameIsNotPassedToMagicFactoryMethodForBinderAddition()
     {
+        $this->expectException('BadMethodCallException');
         $injector = new Horde_Injector($this->_getTopLevelNeverCalledMock());
         $injector->bindMock();
     }
@@ -56,6 +70,7 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
      */
     public function testShouldThrowExceptionIfMethodNameIsInvalid()
     {
+        $this->expectException('BadMethodCallException');
         $injector = new Horde_Injector($this->_getTopLevelNeverCalledMock());
         $injector->invalid();
     }
@@ -159,7 +174,9 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
      */
     public function testChildInjectorsDoNotAskParentForInstanceIfBindingIsSet()
     {
-        $mockTopLevel = $this->getMock('Horde_Injector_TopLevel', array('getInstance'));
+        $mockTopLevel = $this->getMockBuilder('Horde_Injector_TopLevel')
+            ->setMethods(array('getInstance'))
+            ->getMock();
         $mockTopLevel->expects($this->never())->method('getInstance');
         $injector = new Horde_Injector($mockTopLevel);
 
@@ -169,7 +186,9 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
 
     public function testChildInjectorAsksParentForInstance()
     {
-        $topLevelMock = $this->getMock('Horde_Injector_TopLevel', array('getInstance'));
+        $topLevelMock = $this->getMockBuilder('Horde_Injector_TopLevel')
+            ->setMethods(array('getInstance'))
+            ->getMock();
 
         $topLevelMock->expects($this->once())
             ->method('getInstance')
@@ -225,14 +244,14 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
 
     public function testShouldAllowChildInjectorsAccessToParentInjectorBindings()
     {
-        $mockInjector = $this->getMock('Horde_Injector_TopLevel', array('getBinder'));
+        $mockInjector = $this->getMockBuilder('Horde_Injector_TopLevel', array('getBinder'))->getMock();
         $mockInjector->expects($this->any()) // this gets called once in addBinder
             ->method('getBinder')
             ->with('BOUND_INTERFACE')
-            ->will($this->returnValue(new Horde_Injector_Binder_Mock()));
+            ->will($this->returnValue(new Binder_Mock()));
 
         $injector = new Horde_Injector($mockInjector);
-        $binder = new Horde_Injector_Binder_Mock();
+        $binder = new Binder_Mock();
         $injector->addBinder('BOUND_INTERFACE', $binder);
         $childInjector = $injector->createChildInjector();
         $this->assertSame($binder, $childInjector->getBinder('BOUND_INTERFACE'));
@@ -240,7 +259,7 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
 
     private function _getTopLevelNeverCalledMock()
     {
-        $topLevel = $this->getMock('Horde_Injector_TopLevel', array('getBinder', 'getInstance'));
+        $topLevel = $this->getMockBuilder('Horde_Injector_TopLevel', array('getBinder', 'getInstance'))->getMock();
         $topLevel->expects($this->never())->method('getBinder');
         return $topLevel;
     }
@@ -249,7 +268,7 @@ class Horde_Injector_InjectorTest extends PHPUnit_Framework_TestCase
 /**
  * Used by preceding tests
  */
-class Horde_Injector_Binder_Mock implements Horde_Injector_Binder
+class Binder_Mock implements Horde_Injector_Binder
 {
     private $_interface;
     public function create(Horde_Injector $injector)
@@ -263,7 +282,7 @@ class Horde_Injector_Binder_Mock implements Horde_Injector_Binder
     }
 }
 
-class Horde_Injector_Binder_MockWithDependencies implements Horde_Injector_Binder
+class MockWithDependencies implements Horde_Injector_Binder
 {
     private $_interface;
 

@@ -1,5 +1,11 @@
 <?php
-class Horde_Injector_BinderTest extends Horde_Test_Case
+namespace Horde\Injector;
+use Horde_Test_Case;
+use \Horde_Injector_DependencyFinder;
+use \Horde_Injector_Binder_Implementation;
+use \Horde_Injector_Binder_Factory;
+
+class BinderTest extends Horde_Test_Case
 {
     /**
      * provider returns binder1, binder2, shouldEqual, errmesg

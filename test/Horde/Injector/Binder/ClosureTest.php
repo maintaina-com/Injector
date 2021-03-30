@@ -1,10 +1,23 @@
 <?php
-class Horde_Injector_Binder_ClosureTest extends Horde_Test_Case
+
+namespace Horde\Injector\Binder;
+use Horde_Test_Case;
+use \Horde_Injector;
+use \Horde_Injector_Binder_Closure;
+use \Horde_Injector_TopLevel;
+
+class ClosureTest extends Horde_Test_Case
 {
     public function testShouldCallClosure()
     {
-        $childInjector = $this->getMockSkipConstructor('Horde_Injector', array('createInstance', 'getInstance'));
-        $injector = $this->getMockSkipConstructor('Horde_Injector', array('createChildInjector'));
+        $childInjector = $this->getMockBuilder('Horde_Injector')
+            ->setMethods(array('createInstance', 'getInstance'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $injector = $this->getMockBuilder('Horde_Injector')
+            ->setMethods(array('createChildInjector'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $injector->expects($this->once())
             ->method('createChildInjector')
             ->with()
